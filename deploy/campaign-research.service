@@ -6,15 +6,14 @@ Wants=network-online.target
 [Service]
 Type=simple
 
-# Three paths below assume Amazon Linux (ec2-user). On Ubuntu the login user is
-# `ubuntu` - after copying this file into /etc/systemd/system, run:
-#   sudo sed -i "s/ec2-user/$USER/g" /etc/systemd/system/campaign-research.service
-User=ec2-user
-WorkingDirectory=/home/ec2-user/campaign-research
-ExecStart=/home/ec2-user/.bun/bin/bun run src/main.ts
+# Ubuntu EC2 AMI: the login user is `ubuntu`. If you deploy somewhere the login
+# user differs (Amazon Linux uses `ec2-user`), change all three paths below.
+User=ubuntu
+WorkingDirectory=/home/ubuntu/n8n-outreach
+ExecStart=/home/ubuntu/.bun/bin/bun run src/main.ts
 
 # There is no EnvironmentFile. Bun loads .env from WorkingDirectory automatically,
-# so the secrets live in /home/ec2-user/campaign-research/.env (chmod 600).
+# so the secrets live in /home/ubuntu/n8n-outreach/.env (chmod 600).
 Restart=always
 RestartSec=5
 
