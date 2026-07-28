@@ -1,0 +1,14 @@
+node_modules/
+
+# Learned state - machine-local, back it up with cp, never commit it.
+state/
+
+# Credentials must never enter the repo. The .example templates are the exception.
+# The OAuth refresh token lives in .env / the systemd EnvironmentFile and nowhere else.
+.env
+.env.*
+*.env
+!.env.example
+!deploy/*.env.example
+*.pem
+*.key

@@ -1,0 +1,35 @@
+[Unit]
+Description=Campaign research (scheduler + API)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+
+# Three paths below assume Amazon Linux (ec2-user). On Ubuntu the login user is
+# `ubuntu` - after copying this file into /etc/systemd/system, run:
+#   sudo sed -i "s/ec2-user/$USER/g" /etc/systemd/system/campaign-research.service
+User=ec2-user
+WorkingDirectory=/home/ec2-user/campaign-research
+ExecStart=/home/ec2-user/.bun/bin/bun run src/main.ts
+
+# There is no EnvironmentFile. Bun loads .env from WorkingDirectory automatically,
+# so the secrets live in /home/ec2-user/campaign-research/.env (chmod 600).
+Restart=always
+RestartSec=5
+
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=campaign-research
+
+# Hardening that costs no extra setup steps. Do NOT add ProtectHome - the code,
+# the .env and state/ all live under $HOME. Do NOT add ProtectSystem=strict - it
+# would force a ReadWritePaths entry for state/.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectKernelTunables=true
+RestrictSUIDSGID=true
+
+[Install]
+WantedBy=multi-user.target

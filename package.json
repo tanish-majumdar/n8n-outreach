@@ -1,0 +1,32 @@
+{
+  "name": "campaign-research",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "module": "src/main.ts",
+  "engines": {
+    "bun": ">=1.1.0"
+  },
+  "scripts": {
+    "start": "bun run src/main.ts",
+    "dev": "bun --watch src/main.ts",
+    "cli": "bun run src/cli.ts",
+    "test": "LOG_LEVEL=silent bun test",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@ai-sdk/openai-compatible": "^1.0.0",
+    "ai": "^5.0.0",
+    "commander": "^13.0.0",
+    "croner": "^9.0.0",
+    "google-auth-library": "^10.0.0",
+    "hono": "^4.6.0",
+    "p-retry": "^6.2.0",
+    "pino": "^9.5.0",
+    "zod": "^3.25.0"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.1.14",
+    "typescript": "^5.7.0"
+  }
+}
