@@ -158,9 +158,20 @@ The service starts the scheduler *and* the API. There is no separate timer — t
 
 ```bash
 curl localhost:8787/health
-curl -H "authorization: Bearer $(grep ADMIN_TOKEN ~/n8n-outreach/.env | cut -d= -f2)" \
-  localhost:8787/api/status
+
+cd ~/n8n-outreach
+TOKEN=$(bun -e 'process.stdout.write(process.env.ADMIN_TOKEN ?? "")')
+curl -H "authorization: Bearer $TOKEN" localhost:8787/api/status
 ```
+
+Read the token through Bun rather than `grep | cut`. The auth check is exact string
+equality (`src/server/app.ts:24`) against the *parsed* value, and Bun strips surrounding
+quotes and trailing `#` comments — so the raw file text and what the service compares
+against are not always the same string. Letting Bun parse `.env` removes the discrepancy.
+
+A `401` here is not a config failure: `requireAuth` returns early when `ADMIN_TOKEN` is
+empty, so a rejection proves the service is running *and* the token loaded. It means your
+shell extracted the wrong string.
 
 `/health` needs no auth; everything under `/api/*` needs the bearer token.
 `status.schedule.next` confirms the scheduler is armed — if that timestamp looks wrong,
